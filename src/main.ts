@@ -2,6 +2,8 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+//import Button from 'ant-design-vue/lib/button';
+//Vue.component(Button.name, Button);
 
 Vue.config.productionTip = false;
 
