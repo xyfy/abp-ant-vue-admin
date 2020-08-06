@@ -1,12 +1,12 @@
 import request from '@/utils/request'
 
 const api = {
-  user: '/user',
-  role: '/role',
-  service: '/service',
-  permission: '/permission',
-  permissionNoPager: '/permission/no-pager',
-  orgTree: '/org/tree'
+  user: process.env.VUE_APP_API_BASE_URL + '/user',
+  role: process.env.VUE_APP_API_BASE_URL + '/role',
+  service: process.env.VUE_APP_API_BASE_URL + '/service',
+  permission: process.env.VUE_APP_API_BASE_URL + '/permission',
+  permissionNoPager: process.env.VUE_APP_API_BASE_URL + '/permission/no-pager',
+  orgTree: process.env.VUE_APP_API_BASE_URL + '/org/tree'
 }
 
 export default api

@@ -1,16 +1,16 @@
 import request from '@/utils/request'
 
 const userApi = {
-  Login: '/auth/login',
-  Logout: '/auth/logout',
-  ForgePassword: '/auth/forge-password',
-  Register: '/auth/register',
-  twoStepCode: '/auth/2step-code',
-  SendSms: '/account/sms',
-  SendSmsErr: '/account/sms_err',
+  Login: process.env.VUE_APP_API_AUTH_URL + '/connect/token',
+  Logout: process.env.VUE_APP_API_AUTH_URL + '/auth/logout',
+  ForgePassword: process.env.VUE_APP_API_AUTH_URL + '/auth/forge-password',
+  Register: process.env.VUE_APP_API_AUTH_URL + '/auth/register',
+  twoStepCode: process.env.VUE_APP_API_AUTH_URL + '/auth/2step-code',
+  SendSms: process.env.VUE_APP_API_AUTH_URL + '/account/sms',
+  SendSmsErr: process.env.VUE_APP_API_AUTH_URL + '/account/sms_err',
   // get my info
-  UserInfo: '/user/info',
-  UserMenu: '/user/nav'
+  UserInfo: process.env.VUE_APP_API_AUTH_URL + '/user/info',
+  UserMenu: process.env.VUE_APP_API_AUTH_URL + '/user/nav'
 }
 
 /**
