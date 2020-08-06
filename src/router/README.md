@@ -1,7 +1,6 @@
 路由/菜单说明
 ====
 
-
 格式和说明
 ----
 
@@ -20,8 +19,6 @@ const routerObject = {
 }
 ```
 
-
-
 `{ Route }` 对象
 
 | 参数     | 说明                                      | 类型    | 默认值 |
@@ -31,7 +28,6 @@ const routerObject = {
 | name     | 路由名称, 必须设置,且不能重名           | string  | -      |
 | meta     | 路由元信息（路由附带扩展信息）            | object  | {}     |
 | hideChildrenInMenu | 强制菜单显示为Item而不是SubItem(配合 meta.hidden) | boolean  | -   |
-
 
 `{ Meta }` 路由元信息对象
 
@@ -120,15 +116,13 @@ const asyncRouterMap = [
 ]
 ```
 
-> 1. 请注意 `component: () => import('..') ` 方式引入路由的页面组件为 懒加载模式。具体可以看 [Vue 官方文档](https://router.vuejs.org/zh/guide/advanced/lazy-loading.html)
+> 1. 请注意 `component: () => import('..')` 方式引入路由的页面组件为 懒加载模式。具体可以看 [Vue 官方文档](https://router.vuejs.org/zh/guide/advanced/lazy-loading.html)
 > 2. 增加新的路由应该增加在 '/' (index) 路由的 `children` 内
 > 3. 子路由的父级路由必须有 `router-view` 才能让子路由渲染出来，请仔细查阅 vue-router 文档
 > 4. `permission` 可以进行自定义修改，只需要对这个模块进行自定义修改即可 [src/store/modules/permission.js#L10](https://github.com/vueComponent/ant-design-vue-pro/blob/master/src/store/modules/permission.js#L10)
 
-
 附权限路由结构：
 
 ![权限结构](https://static-2.loacg.com/open/static/github/permissions.png)
-
 
 第二种前端路由由后端动态生成的设计，可以前往官网文档 https://pro.antdv.com/docs/authority-management 参考
