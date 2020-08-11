@@ -22,7 +22,7 @@
     <template v-slot:footerRender>
       <global-footer />
     </template>
-    <multi-tab v-if="multiTab"></multi-tab>
+    <!-- <multi-tab v-if="multiTab"></multi-tab> -->
     <router-view />
   </pro-layout>
 </template>
