@@ -13,7 +13,13 @@
         @change="handleTabClick"
       >
         <a-tab-pane key="tab1" tab="账号密码登录">
-          <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px;" message="账户或密码错误（admin/ant.design )" />
+          <a-alert
+            v-if="isLoginError"
+            type="error"
+            showIcon
+            style="margin-bottom: 24px;"
+            message="账户或密码错误（admin/ant.design )"
+          />
           <a-form-item>
             <a-input
               size="large"
@@ -24,7 +30,7 @@
                 {rules: [{ required: true, message: '请输入帐户名或邮箱地址' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
               ]"
             >
-              <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+              <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
           </a-form-item>
 
@@ -37,22 +43,32 @@
                 {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
               ]"
             >
-              <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+              <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input-password>
           </a-form-item>
         </a-tab-pane>
         <a-tab-pane key="tab2" tab="手机号登录">
           <a-form-item>
-            <a-input size="large" type="text" placeholder="手机号" v-decorator="['mobile', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]">
-              <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+            <a-input
+              size="large"
+              type="text"
+              placeholder="手机号"
+              v-decorator="['mobile', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]"
+            >
+              <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
           </a-form-item>
 
           <a-row :gutter="16">
             <a-col class="gutter-row" :span="16">
               <a-form-item>
-                <a-input size="large" type="text" placeholder="验证码" v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
-                  <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+                <a-input
+                  size="large"
+                  type="text"
+                  placeholder="验证码"
+                  v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]"
+                >
+                  <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }" />
                 </a-input>
               </a-form-item>
             </a-col>
@@ -114,7 +130,6 @@
 </template>
 
 <script>
-import md5 from 'md5'
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
@@ -144,8 +159,14 @@ export default {
     }
   },
   created () {
-    get2step({ })
-      .then(res => {
+    const tenantName = 'Default'
+    this.ChangeTenant(tenantName).then((res) => {
+      if (!res.success) {
+        this.$notification.error({ message: `租户${tenantName}不存在`, description: '不存在的租户，已为您切换到宿主' })
+      }
+    })
+    get2step({})
+      .then((res) => {
         this.requiredTwoStepCaptcha = res.result.stepCode
       })
       .catch(() => {
@@ -154,7 +175,7 @@ export default {
     // this.requiredTwoStepCaptcha = true
   },
   methods: {
-    ...mapActions(['Login', 'Logout']),
+    ...mapActions(['Login', 'Logout', 'ChangeTenant']),
     // handler
     handleUsernameOrEmail (rule, value, callback) {
       const { state } = this
@@ -187,12 +208,14 @@ export default {
         if (!err) {
           console.log('login form', values)
           const loginParams = { ...values }
-          delete loginParams.username
-          loginParams[!state.loginType ? 'email' : 'username'] = values.username
-          loginParams.password = md5(values.password)
+          // 此处不区分是邮箱还是用户名登录
+          // delete loginParams.username
+          // loginParams[!state.loginType ? 'email' : 'username'] = values.username
+          // 不对密码md5
+          // loginParams.password = md5(values.password)
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
-            .catch(err => this.requestFailed(err))
+            .catch((err) => this.requestFailed(err))
             .finally(() => {
               state.loginBtn = false
             })
@@ -205,7 +228,10 @@ export default {
     },
     getCaptcha (e) {
       e.preventDefault()
-      const { form: { validateFields }, state } = this
+      const {
+        form: { validateFields },
+        state
+      } = this
 
       validateFields(['mobile'], { force: true }, (err, values) => {
         if (!err) {
@@ -220,20 +246,22 @@ export default {
           }, 1000)
 
           const hide = this.$message.loading('验证码发送中..', 0)
-          getSmsCaptcha({ mobile: values.mobile }).then(res => {
-            setTimeout(hide, 2500)
-            this.$notification['success']({
-              message: '提示',
-              description: '验证码获取成功，您的验证码为：' + res.result.captcha,
-              duration: 8
+          getSmsCaptcha({ mobile: values.mobile })
+            .then((res) => {
+              setTimeout(hide, 2500)
+              this.$notification['success']({
+                message: '提示',
+                description: '验证码获取成功，您的验证码为：' + res.result.captcha,
+                duration: 8
+              })
             })
-          }).catch(err => {
-            setTimeout(hide, 1)
-            clearInterval(interval)
-            state.time = 60
-            state.smsSendBtn = false
-            this.requestFailed(err)
-          })
+            .catch((err) => {
+              setTimeout(hide, 1)
+              clearInterval(interval)
+              state.time = 60
+              state.smsSendBtn = false
+              this.requestFailed(err)
+            })
         }
       })
     },

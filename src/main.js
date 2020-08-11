@@ -11,6 +11,7 @@ import { VueAxios } from './utils/request'
 import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
 import themePluginConfig from '../config/themePluginConfig'
 import bootstrap from './core/bootstrap'
+import './mock'
 import './core/lazy_use'
 import './permission' // permission control
 import './utils/filter' // global filter

@@ -1,16 +1,25 @@
 import request from '@/utils/request'
-
+import apiConfig from './config'
 const userApi = {
-  Login: process.env.VUE_APP_API_AUTH_URL + '/connect/token',
-  Logout: process.env.VUE_APP_API_AUTH_URL + '/auth/logout',
-  ForgePassword: process.env.VUE_APP_API_AUTH_URL + '/auth/forge-password',
-  Register: process.env.VUE_APP_API_AUTH_URL + '/auth/register',
-  twoStepCode: process.env.VUE_APP_API_AUTH_URL + '/auth/2step-code',
-  SendSms: process.env.VUE_APP_API_AUTH_URL + '/account/sms',
-  SendSmsErr: process.env.VUE_APP_API_AUTH_URL + '/account/sms_err',
+  Login: '/connect/token',
+  ChangeTenant: '/api/abp/multi-tenancy/tenants/by-name/',
+  Logout: '/auth/logout',
+  ForgePassword: '/auth/forge-password',
+  Register: '/auth/register',
+  twoStepCode: '/auth/2step-code',
+  SendSms: '/account/sms',
+  SendSmsErr: '/account/sms_err',
   // get my info
-  UserInfo: process.env.VUE_APP_API_AUTH_URL + '/user/info',
-  UserMenu: process.env.VUE_APP_API_AUTH_URL + '/user/nav'
+  UserInfo: '/user/info',
+  UserMenu: '/user/nav'
+}
+
+export function changetenant (tenantName) {
+  return request({
+    method: 'GET',
+    url: userApi.ChangeTenant + tenantName,
+    baseURL: apiConfig.authConfig.issuer
+  })
 }
 
 /**
@@ -25,10 +34,23 @@ const userApi = {
  * @returns {*}
  */
 export function login (parameter) {
+  const formData = new FormData()
+  formData.append('username', parameter.username)
+  formData.append('email', parameter.username)
+  formData.append('password', parameter.password)
+  formData.append('grant_type', 'password')
+  if (apiConfig.authConfig.scope) {
+    formData.append('scope', `${apiConfig.authConfig.scope} offline_access`)
+  }
+  formData.append('client_id', apiConfig.authConfig.clientId)
+  formData.append('client_secret', apiConfig.authConfig.dummyClientSecret)
+
   return request({
+    method: 'POST',
     url: userApi.Login,
-    method: 'post',
-    data: parameter
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data: formData,
+    baseURL: apiConfig.authConfig.issuer
   })
 }
 
