@@ -28,19 +28,19 @@ export const asyncRouterMap = [
             path: '/dashboard/analysis/:pageNo([1-9]\\d*)?',
             name: 'Analysis',
             component: () => import('@/views/dashboard/Analysis'),
-            meta: { title: 'menu.dashboard.analysis', keepAlive: false, permission: [ 'dashboard' ] }
+            meta: { title: '分析', keepAlive: false, permission: [ 'dashboard' ] }
           },
-          // 外部链接
-          {
-            path: 'https://www.baidu.com/',
-            name: 'Monitor',
-            meta: { title: 'menu.dashboard.monitor', target: '_blank' }
-          },
+          // // 外部链接
+          // {
+          //   path: 'https://www.baidu.com/',
+          //   name: 'Monitor',
+          //   meta: { title: 'menu.dashboard.monitor', target: '_blank' }
+          // },
           {
             path: '/dashboard/workplace',
             name: 'Workplace',
             component: () => import('@/views/dashboard/Workplace'),
-            meta: { title: 'menu.dashboard.workplace', keepAlive: true, permission: [ 'dashboard' ] }
+            meta: { title: '工作台', keepAlive: true, permission: [ 'dashboard' ] }
           }
         ]
       },

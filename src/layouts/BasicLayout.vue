@@ -13,11 +13,16 @@
   >
     <setting-drawer :settings="settings" @change="handleSettingChange" />
     <template v-slot:rightContentRender>
-      <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
+      <right-content
+        :top-menu="settings.layout === 'topmenu'"
+        :is-mobile="isMobile"
+        :theme="settings.theme"
+      />
     </template>
     <template v-slot:footerRender>
       <global-footer />
     </template>
+    <multi-tab v-if="multiTab"></multi-tab>
     <router-view />
   </pro-layout>
 </template>
@@ -32,13 +37,14 @@ import defaultSettings from '@/config/defaultSettings'
 import RightContent from '@/components/GlobalHeader/RightContent'
 import GlobalFooter from '@/components/GlobalFooter'
 import LogoSvg from '../assets/logo.svg?inline'
-
+import MultiTab from '@/components/MultiTab'
 export default {
   name: 'BasicLayout',
   components: {
     SettingDrawer,
     RightContent,
-    GlobalFooter
+    GlobalFooter,
+    MultiTab
   },
   data () {
     return {
@@ -77,11 +83,12 @@ export default {
   computed: {
     ...mapState({
       // 动态主路由
-      mainMenu: state => state.permission.addRouters
+      mainMenu: (state) => state.permission.addRouters,
+      multiTab: (state) => state.app.multiTab
     })
   },
   created () {
-    const routes = this.mainMenu.find(item => item.path === '/')
+    const routes = this.mainMenu.find((item) => item.path === '/')
     this.menus = (routes && routes.children) || []
     // 处理侧栏收起状态
     this.$watch('collapsed', () => {
@@ -151,5 +158,5 @@ export default {
 </script>
 
 <style lang="less">
-@import "./BasicLayout.less";
+@import './BasicLayout.less';
 </style>
