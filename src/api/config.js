@@ -5,7 +5,7 @@ const Configs = {
     }
   },
   authConfig: {
-    issuer: 'http://localhost:64999',
+    issuer: 'http://106.14.16.41:30001',
     clientId: 'app-client',
     dummyClientSecret: 'winkappsercret',
     scope: '',
