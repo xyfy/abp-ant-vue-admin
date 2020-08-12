@@ -23,7 +23,7 @@ export default {
   menu: {
     locale: true
   },
-  title: 'Ant Design Pro',
+  title: 'Abp Ant Design Pro',
   pwa: false,
   iconfontUrl: '',
   multiTab: true,

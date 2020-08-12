@@ -3,13 +3,14 @@ import store from '@/store'
 import storage from 'store'
 import notification from 'ant-design-vue/es/notification'
 import { VueAxios } from './axios'
+// import config from '@/api/config'
 import { ACCESS_TOKEN, TENANT, APP_LANGUAGE } from '@/store/mutation-types'
 
 // 创建 axios 实例
 const request = axios.create({
   // API 请求的默认前缀
   baseURL: process.env.VUE_APP_API_BASE_URL,
-  timeout: 6000 // 请求超时时间
+  timeout: 30000 // 请求超时时间
 })
 
 // 异常拦截处理器

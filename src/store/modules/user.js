@@ -10,7 +10,7 @@ const user = {
     name: '',
     welcome: '',
     avatar: '',
-    roles: [],
+    permissionList: [],
     info: {}
   },
 
@@ -28,8 +28,8 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
+    SET_PERMISSIONLIST: (state, permissionList) => {
+      state.permissionList = permissionList
     },
     SET_INFO: (state, info) => {
       state.info = info
@@ -76,32 +76,20 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo()
           .then(response => {
-            const result = response.result
-
-            if (result.role && result.role.permissions.length > 0) {
-              const role = result.role
-              role.permissions = result.role.permissions
-              role.permissions.map(per => {
-                if (per.actionEntitySet != null && per.actionEntitySet.length > 0) {
-                  const action = per.actionEntitySet.map(action => {
-                    return action.action
-                  })
-                  per.actionList = action
-                }
-              })
-              role.permissionList = role.permissions.map(permission => {
-                return permission.permissionId
-              })
-              commit('SET_ROLES', result.role)
-              commit('SET_INFO', result)
-            } else {
-              reject(new Error('getInfo: roles must be a non-null array !'))
+            const result = response
+            const info = result.currentUser
+            if (result.currentUser.isAuthenticated) {
+              commit('SET_AVATAR', result.avatar) // 头像
+              commit('SET_NAME', { name: info.userName, welcome: welcome() })
             }
-
-            commit('SET_NAME', { name: result.name, welcome: welcome() })
-            commit('SET_AVATAR', result.avatar)
-
-            resolve(response)
+            if (result.currentTenant.isAvailable) {
+              storage.set(TENANT, result.currentTenant, 7 * 24 * 60 * 60 * 1000)
+              commit('SET_TENANT', result.currentTenant)
+            }
+            info.permissionList = Object.keys(result.auth.grantedPolicies) // 把已有权限的字符串赋值给数组
+            commit('SET_PERMISSIONLIST', info.permissionList)
+            commit('SET_INFO', info)
+            resolve(info)
           })
           .catch(error => {
             reject(error)
@@ -121,8 +109,10 @@ const user = {
           })
           .finally(() => {
             commit('SET_TOKEN', {})
+            commit('SET_INFO', {})
             commit('SET_TENANT', {})
-            commit('SET_ROLES', [])
+            commit('SET_PERMISSIONLIST', [])
+            commit('SET_NAME', '')
             storage.remove(ACCESS_TOKEN)
           })
       })
